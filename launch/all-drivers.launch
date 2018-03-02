@@ -1,0 +1,14 @@
+<!-- Core robot nodes -->
+
+<launch>
+    <arg name="bag_dir" default="/home/david/projects/atrvJr_catkin/bags/" />
+    
+    <include file="$(find rflex)/launch/rflex.launch"/>
+    <!--<include file="$(find atrvjr_bringup)/launch/ptu.launch"/>-->
+    <!--<include file="$(find atrvjr_bringup)/launch/sick.launch"/>
+    <include file="$(find atrvjr_bringup)/launch/urg.launch"/>-->
+    <!-- Bag recorder -->    
+    <node pkg="rosbag" type="record" name="bag_rec"
+                args="-o $(arg bag_dir)bag -a"
+    />
+</launch>
