@@ -53,6 +53,8 @@ class ATRVJRNode {
 
         tf::TransformBroadcaster broadcaster; ///< Transform Broadcaster (for odom)
         std::string odometry_frame_id;        ///< Frame name to use for odometry
+        
+        nav_msgs::Odometry odom;            ///< Published odometry message
 
         bool isSonarOn;
         double last_distance, last_bearing;
@@ -104,10 +106,26 @@ ATRVJRNode::ATRVJRNode() : n ("~") {
     n.param("power_offset", driver.config.power_offset, 1.2);
     n.param("plugged_threshold", driver.config.plugged_threshold, 29.0);
     n.param("odometry_frame_id", odometry_frame_id, std::string("odom"));
+            std::vector<double> pose_cov;       ///< Pose covariance
+        std::vector<double> twist_cov;      ///< Twist covariance
+    // Covariances
+    n.getParam("pose_cov", pose_cov);
+    for(int i=0; i<36; i++)
+        std::cout << pose_cov[i];
+    std::cout << std::endl;
+    n.getParam("twist_cov", twist_cov);
+    
+    // Covariance initialization
+    for (int i = 0; i < 36; i++) {
+        odom.pose.covariance[i] = pose_cov[i];
+    }
+    
+    for (int i = 0; i < 36; i++) {
+        odom.twist.covariance[i] = twist_cov[i];
+    }
 
     // Setup dynamic reconfigure
     reconfigure_srv_.setCallback(boost::bind(&ATRVJRNode::reconfigureCb, this, _1, _2));
-
 
     isSonarOn = false;
     initialized = false;
@@ -257,7 +275,6 @@ void ATRVJRNode::publishOdometry() {
     broadcaster.sendTransform(odom_trans);
 
     //next, we'll publish the odometry message over ROS
-    nav_msgs::Odometry odom;
     odom.header.stamp = ros::Time::now();
     odom.header.frame_id = odometry_frame_id;
 
@@ -265,12 +282,6 @@ void ATRVJRNode::publishOdometry() {
     odom.pose.pose.position.x = x_odo;
     odom.pose.pose.position.y = y_odo;
     odom.pose.pose.orientation = odom_quat;
-
-    // Need non-zero covariance for robot_pose_ekf
-    for (int i = 0; i < 6; i++)
-    {
-      odom.pose.covariance[i * 7] = 1;
-    }
 
     //set the velocity
     odom.child_frame_id = "base_link";
@@ -304,7 +315,7 @@ void ATRVJRNode::publishSonar() {
 }
 
 int main(int argc, char** argv) {
-    ros::init(argc, argv, "atrvjr");
+    ros::init(argc, argv, "atrvjr_node");
     ATRVJRNode node;
     std::string port;
     node.n.param<std::string>("port", port, "/dev/ttyUSB0");
