@@ -286,8 +286,11 @@ void ATRVJRNode::publishOdometry() {
     //set the velocity
     odom.child_frame_id = "base_link";
     double tvel = driver.getTransVelocity();
-    odom.twist.twist.linear.x = tvel*cos(a_odo);
-    odom.twist.twist.linear.y = tvel*sin(a_odo);
+    odom.twist.twist.linear.x = tvel;//*cos(a_odo);
+    odom.twist.twist.linear.y = 0.0;//tvel*sin(a_odo);
+    odom.twist.twist.linear.z = 0.0;
+    odom.twist.twist.angular.x = 0.0;
+    odom.twist.twist.angular.y = 0.0;
     odom.twist.twist.angular.z = driver.getRotVelocity();
 
     //publish the message
