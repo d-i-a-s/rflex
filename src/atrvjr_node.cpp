@@ -106,13 +106,10 @@ ATRVJRNode::ATRVJRNode() : n ("~") {
     n.param("power_offset", driver.config.power_offset, 1.2);
     n.param("plugged_threshold", driver.config.plugged_threshold, 29.0);
     n.param("odometry_frame_id", odometry_frame_id, std::string("odom"));
-            std::vector<double> pose_cov;       ///< Pose covariance
-        std::vector<double> twist_cov;      ///< Twist covariance
+    std::vector<double> pose_cov;       ///< Pose covariance
+    std::vector<double> twist_cov;      ///< Twist covariance
     // Covariances
     n.getParam("pose_cov", pose_cov);
-    for(int i=0; i<36; i++)
-        std::cout << pose_cov[i];
-    std::cout << std::endl;
     n.getParam("twist_cov", twist_cov);
     
     // Covariance initialization
