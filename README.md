@@ -17,7 +17,7 @@ Give the following permissions to your serial port by running:
 ```
 sudo chmod 666 /dev/ttyUSB0
 ```
-
+As an permanent alternative it is possible to set udev rules for your serial adaptor.
 ## Authors
 
 * **David V. Lu, Mikhail Medvedev**
