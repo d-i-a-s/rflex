@@ -1,5 +1,5 @@
 <launch>
-    <arg name="ns" default=""/>
+    <arg name="ns" default="/rflex"/>
     <arg name="serialPort" default="/dev/ttyUSB0"/>
 
     <node ns="$(arg ns)" pkg="rflex" type="atrvjr_node" name="atrvjr_node" output="screen">
