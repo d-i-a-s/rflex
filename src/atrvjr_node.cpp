@@ -269,7 +269,7 @@ void ATRVJRNode::publishOdometry() {
     odom_trans.transform.rotation = odom_quat;
 
     //send the transform
-    broadcaster.sendTransform(odom_trans);
+//     broadcaster.sendTransform(odom_trans);
 
     //next, we'll publish the odometry message over ROS
     odom.header.stamp = ros::Time::now();
@@ -301,7 +301,7 @@ void ATRVJRNode::publishOdometry() {
     joint_state.name[0] = "lewis_twist";
     joint_state.position[0] = true_bearing;
 
-    joint_pub.publish(joint_state);
+//     joint_pub.publish(joint_state);
 
 }
 
